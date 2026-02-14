@@ -193,15 +193,24 @@ endif
 
 # ---------- Optional features ----------
 
-# RandomX
+# RandomX - use system librandomx if available, else build from submodule.
+# The submodule is still needed for internal headers (cpu.hpp) regardless.
 ifeq ($(WITH_RANDOMX),1)
   DEFINES += -DWITH_RANDOMX
   INCLUDES += -Iexternal/src/RandomX/src
   CXX_SOURCES += src/miner.cpp
-  RANDOMX_BUILDDIR := external/src/RandomX/build
-  RANDOMX_LIB := $(RANDOMX_BUILDDIR)/librandomx.a
-  LIBS += $(RANDOMX_LIB)
-  RANDOMX_DEP := $(RANDOMX_LIB)
+  RANDOMX_SYSTEM_LIB := $(shell find /usr/lib -name 'librandomx.so' -o -name 'librandomx.a' 2>/dev/null | head -1)
+  ifneq ($(RANDOMX_SYSTEM_LIB),)
+    # System librandomx found
+    LIBS += -lrandomx
+    RANDOMX_DEP :=
+  else
+    # Build from submodule
+    RANDOMX_BUILDDIR := external/src/RandomX/build
+    RANDOMX_LIB := $(RANDOMX_BUILDDIR)/librandomx.a
+    LIBS += $(RANDOMX_LIB)
+    RANDOMX_DEP := $(RANDOMX_LIB)
+  endif
 else
   CXX_SOURCES += external/src/RandomX/src/cpu.cpp
   RANDOMX_DEP :=
