@@ -16,6 +16,9 @@ ExecStart=${MONEROD:-monerod} \
     --add-priority-node=nodes.hashvault.pro:18080 \
     --enforce-dns-checkpointing \
     --enable-dns-blocklist \
+    --prune-blockchain \
+    --sync-pruned-blocks \
+    --db-sync-mode=safe:sync \
     --data-dir ${MONEROD_DATA:-%h/.bitmonero} \
     --non-interactive
 Restart=on-failure
