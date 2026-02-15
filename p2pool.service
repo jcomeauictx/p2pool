@@ -1,0 +1,23 @@
+# systemd user service for p2pool
+# Install to ~/.config/systemd/user/ via: make install-services
+# WALLET must be set in ~/.config/p2pool/env
+[Unit]
+Description=P2Pool Monero mining daemon
+After=monerod.service
+Requires=monerod.service
+
+[Service]
+Type=simple
+EnvironmentFile=-%h/.config/p2pool/env
+ExecStart=${P2POOL:-p2pool} \
+    --host 127.0.0.1 \
+    --wallet ${WALLET} \
+    ${P2POOL_OPTS}
+WorkingDirectory=${P2POOL_DATA:-%h/.p2pool}
+ExecStartPre=/bin/mkdir -p ${P2POOL_DATA:-%h/.p2pool}
+Restart=on-failure
+RestartSec=30
+TimeoutStopSec=60
+
+[Install]
+WantedBy=default.target
