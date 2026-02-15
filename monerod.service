@@ -1,6 +1,6 @@
 # systemd user service for monerod
 # Install to ~/.config/systemd/user/ via: make install-services
-# Customize MONEROD and MONEROD_DATA in ~/.config/p2pool/env
+# Set WALLET in ~/.config/p2pool/env
 [Unit]
 Description=Monero daemon (monerod)
 After=network-online.target
@@ -9,7 +9,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 EnvironmentFile=-%h/.config/p2pool/env
-ExecStart=${MONEROD:-monerod} \
+ExecStart=monerod \
     --zmq-pub tcp://127.0.0.1:18083 \
     --out-peers 32 --in-peers 64 \
     --add-priority-node=p2pmd.xmrvsbeast.com:18080 \
@@ -19,7 +19,7 @@ ExecStart=${MONEROD:-monerod} \
     --prune-blockchain \
     --sync-pruned-blocks \
     --db-sync-mode=safe:sync \
-    --data-dir ${MONEROD_DATA:-%h/.bitmonero} \
+    --data-dir %h/.bitmonero \
     --non-interactive
 Restart=on-failure
 RestartSec=30

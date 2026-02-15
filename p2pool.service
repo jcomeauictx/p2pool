@@ -9,12 +9,11 @@ Requires=monerod.service
 [Service]
 Type=simple
 EnvironmentFile=-%h/.config/p2pool/env
-ExecStart=${P2POOL:-p2pool} \
+ExecStart=%h/src/jcomeauictx/p2pool/p2pool \
     --host 127.0.0.1 \
-    --wallet ${WALLET} \
-    ${P2POOL_OPTS}
-WorkingDirectory=${P2POOL_DATA:-%h/.p2pool}
-ExecStartPre=/bin/mkdir -p ${P2POOL_DATA:-%h/.p2pool}
+    --wallet ${WALLET}
+WorkingDirectory=%h/.p2pool
+ExecStartPre=/bin/mkdir -p %h/.p2pool
 Restart=on-failure
 RestartSec=30
 TimeoutStopSec=60

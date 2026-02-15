@@ -1,6 +1,5 @@
 # systemd user service for xmrig
 # Install to ~/.config/systemd/user/ via: make install-services
-# Customize XMRIG and XMRIG_OPTS in ~/.config/p2pool/env
 [Unit]
 Description=XMRig CPU miner for P2Pool
 After=p2pool.service
@@ -8,10 +7,8 @@ Requires=p2pool.service
 
 [Service]
 Type=simple
-EnvironmentFile=-%h/.config/p2pool/env
-ExecStart=${XMRIG:-xmrig} \
-    -o 127.0.0.1:3333 \
-    ${XMRIG_OPTS}
+ExecStart=%h/src/jcomeauictx/xmrig/src/xmrig \
+    -o 127.0.0.1:3333
 Restart=on-failure
 RestartSec=30
 
